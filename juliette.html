@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>Juliette Audition</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap');
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      min-height: 100vh;
+      background: #fdf6f8;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* soft background blobs */
+    body::before {
+      content:'';
+      position:fixed; inset:0;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(255,182,213,0.35) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 80%, rgba(255,210,230,0.3) 0%, transparent 55%),
+        radial-gradient(ellipse at 60% 10%, rgba(255,240,248,0.5) 0%, transparent 40%);
+      z-index:0;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,182,213,0.35);
+      border-radius: 28px;
+      padding: 2.8rem 2.2rem;
+      max-width: 380px;
+      width: 92%;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(220,100,150,0.1);
+    }
+
+    /* ── SCREEN: INTRO ── */
+    .screen { display:none; }
+    .screen.active { display:block; animation: fadeIn 0.45s ease; }
+
+    @keyframes fadeIn {
+      from { opacity:0; transform:translateY(14px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .rose { font-size: 2.8rem; margin-bottom: 0.8rem; }
+
+    .intro-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 7vw, 2.4rem);
+      font-weight: 600;
+      color: #8b3a5a;
+      line-height: 1.2;
+      margin-bottom: 0.8rem;
+    }
+
+    .intro-sub {
+      font-size: 0.9rem;
+      color: #b07090;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+      font-weight: 300;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #e8789a, #c9486e);
+      color: white;
+      border: none;
+      padding: 0.95rem 2.4rem;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      box-shadow: 0 4px 20px rgba(200,70,110,0.3);
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .btn-primary:active { opacity:0.85; transform:scale(0.97); }
+
+    /* ── SCREEN: QUESTION ── */
+    .progress-bar-wrap {
+      background: #fce4ef;
+      border-radius: 50px;
+      height: 5px;
+      width: 100%;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(to right, #e8789a, #c9486e);
+      border-radius: 50px;
+      transition: width 0.4s ease;
+    }
+
+    .q-num {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      color: #d4a0b5;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    .q-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.3rem, 5.5vw, 1.8rem);
+      font-weight: 600;
+      color: #6b2a45;
+      line-height: 1.35;
+      margin-bottom: 2rem;
+      min-height: 3.5rem;
+    }
+
+    .yn-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .btn-yes, .btn-no {
+      flex: 1;
+      max-width: 130px;
+      padding: 0.85rem 0;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.15s, transform 0.15s;
+      border: none;
+    }
+
+    .btn-yes {
+      background: linear-gradient(135deg, #e8789a, #c9486e);
+      color: white;
+      box-shadow: 0 4px 16px rgba(200,70,110,0.25);
+    }
+
+    .btn-no {
+      background: white;
+      color: #c9486e;
+      border: 1.5px solid #f0b0c8;
+    }
+
+    .btn-yes:active, .btn-no:active { opacity:0.8; transform:scale(0.96); }
+
+    /* ── SCREEN: RESULT ── */
+    .result-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+    .result-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.5rem, 7vw, 2.2rem);
+      font-weight: 600;
+      color: #8b3a5a;
+      line-height: 1.25;
+      margin-bottom: 1rem;
+    }
+
+    .result-sub {
+      font-size: 0.88rem;
+      color: #b07090;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    .stamp {
+      display: inline-block;
+      margin-top: 1.6rem;
+      border: 3px solid #c9486e;
+      color: #c9486e;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      padding: 0.45rem 1.4rem;
+      border-radius: 6px;
+      transform: rotate(-4deg);
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- INTRO -->
+  <div class="screen active" id="s-intro">
+    <div class="rose">🌹</div>
+    <h1 class="intro-title">Juliette Ferrars<br>Casting Call</h1>
+    <p class="intro-sub">
+      Think you have what it takes to play<br>
+      <em>the</em> Juliette from Shatter Me?<br>
+      Let's find out.
+    </p>
+    <button class="btn-primary" id="btn-start">Let's Try →</button>
+  </div>
+
+  <!-- QUESTION -->
+  <div class="screen" id="s-question">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+    <p class="q-num" id="q-num">Question 1 of 5</p>
+    <p class="q-text" id="q-text"></p>
+    <div class="yn-row">
+      <button class="btn-yes" id="btn-yes">Yes</button>
+      <button class="btn-no"  id="btn-no">No</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="s-result">
+    <div class="result-icon">💌</div>
+    <h2 class="result-title" id="result-title"></h2>
+    <p class="result-sub" id="result-sub"></p>
+    <div class="stamp" id="result-stamp"></div>
+  </div>
+
+</div>
+
+<script>
+  var questions = [
+    "Are you blonde?",
+    "Is your height 5'3\"?",
+    "Do you have grey eyes?",
+    "Would you describe yourself as a little… psycho?",
+    "Do you truly want to play the role of Juliette?"
+  ];
+
+  var current = 0;
+
+  function show(id) {
+    document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+  }
+
+  function loadQuestion() {
+    document.getElementById('q-num').textContent = 'Question ' + (current+1) + ' of ' + questions.length;
+    document.getElementById('q-text').textContent = questions[current];
+    var pct = ((current) / questions.length) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+  }
+
+  function answer() {
+    current++;
+    if (current < questions.length) {
+      loadQuestion();
+    } else {
+      // fill bar to 100
+      document.getElementById('progress-fill').style.width = '100%';
+      setTimeout(showResult, 300);
+    }
+  }
+
+  function showResult() {
+    document.getElementById('result-title').textContent = 'Sorry, Ganji Budhi Churail —';
+    document.getElementById('result-sub').innerHTML =
+      'You have been officially reviewed by the Juliette Ferrars Casting Committee… and unfortunately, the role is taken.<br><br>However, if you still want to play the Juliette role, you can talk to Shahzer — he\'s our main character. 😏';
+    document.getElementById('result-stamp').textContent = '✗  REJECTED';
+    show('s-result');
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+
+    function addBtn(id, fn) {
+      var el = document.getElementById(id);
+      el.addEventListener('click', fn);
+      el.addEventListener('touchend', function(e){ e.preventDefault(); fn(); });
+    }
+
+    addBtn('btn-start', function() {
+      current = 0;
+      loadQuestion();
+      show('s-question');
+    });
+
+    addBtn('btn-yes', answer);
+    addBtn('btn-no',  answer);
+  });
+</script>
+
+</body>
+</html>
